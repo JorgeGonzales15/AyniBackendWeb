@@ -14,7 +14,6 @@
     <ItemGroup>
       <Folder Include="Ayni\Domain\Repositories\" />
       <Folder Include="Ayni\Domain\Services\" />
-      <Folder Include="Shared\" />
     </ItemGroup>
 
 </Project>
