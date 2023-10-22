@@ -11,4 +11,10 @@
         <PackageReference Include="Swashbuckle.AspNetCore" Version="6.5.0"/>
     </ItemGroup>
 
+    <ItemGroup>
+      <Folder Include="Ayni\Domain\Repositories\" />
+      <Folder Include="Ayni\Domain\Services\" />
+      <Folder Include="Shared\" />
+    </ItemGroup>
+
 </Project>
