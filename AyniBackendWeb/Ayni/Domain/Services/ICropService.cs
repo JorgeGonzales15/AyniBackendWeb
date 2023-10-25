@@ -6,7 +6,7 @@ namespace AyniBackendWeb.Ayni.Domain.Services;
 public interface ICropService
 {
     Task<IEnumerable<Crop>> ListAsync();
-    Task<IEnumerable<Crop>> ListByCategoryIdAsync(int userId);
+    Task<IEnumerable<Crop>> ListByUserIdAsync(int userId);
     Task<CropResponse> SaveAsync(Crop crop);
     Task<CropResponse> UpdateAsync(int cropId, Crop 
         crop);

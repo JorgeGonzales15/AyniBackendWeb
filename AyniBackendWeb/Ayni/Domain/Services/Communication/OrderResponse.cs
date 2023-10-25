@@ -3,13 +3,12 @@ using AyniBackendWeb.Shared.Domain.Services.Communication;
 
 namespace AyniBackendWeb.Ayni.Domain.Services.Communication;
 
-public class CropResponse : BaseResponse<Crop>
+public class OrderResponse : BaseResponse<Order>
 {
-    public CropResponse(string message) : base(message)
+    public OrderResponse(string message) : base(message)
     {
     }
-    public CropResponse(Crop resource) : base(resource)
+    public OrderResponse(Order resource) : base(resource)
     {
     }
-
 }
