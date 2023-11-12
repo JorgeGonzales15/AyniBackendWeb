@@ -1,14 +1,19 @@
+using System.Net.Mime;
 using AutoMapper;
 using AyniBackendWeb.Ayni.Domain.Models;
 using AyniBackendWeb.Ayni.Domain.Services;
 using AyniBackendWeb.Ayni.Resources;
 using AyniBackendWeb.Shared.Extensions;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace AyniBackendWeb.Ayni.Controllers;
 
-
+[EnableCors("ReglasCors")]
 [ApiController]
+[Produces(MediaTypeNames.Application.Json)]
+[SwaggerTag("Crops Management Endpoints")]
 [Route("/api/v1/[controller]")]
 public class CropsController : ControllerBase
 {
@@ -23,6 +28,7 @@ public class CropsController : ControllerBase
     }
 
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<CropResource>), 200)]
     public async Task<IEnumerable<CropResource>> GetAllAsync()
     {
         var crops = await _cropService.ListAsync();
@@ -33,6 +39,9 @@ public class CropsController : ControllerBase
     }
     
     [HttpPost]
+    [ProducesResponseType(typeof(CropResource), 201)]
+    [ProducesResponseType(typeof(List<string>), 400)]
+    [ProducesResponseType(500)]
     public async Task<IActionResult> PostAsync([FromBody] 
         SaveCropResource resource)
     {
@@ -45,7 +54,7 @@ public class CropsController : ControllerBase
             return BadRequest(result.Message);
         var cropResource = _mapper.Map<Crop, 
             CropResource>(result.Resource);
-        return Ok(cropResource);
+        return Created(nameof(PostAsync), cropResource);
     }
     
     [HttpPut("{id}")]

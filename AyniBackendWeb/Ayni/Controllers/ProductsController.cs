@@ -1,13 +1,20 @@
+using System.Net.Mime;
 using AutoMapper;
 using AyniBackendWeb.Ayni.Domain.Models;
 using AyniBackendWeb.Ayni.Domain.Services;
 using AyniBackendWeb.Ayni.Resources;
 using AyniBackendWeb.Shared.Extensions;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace AyniBackendWeb.Ayni.Controllers;
 
+
+[EnableCors("ReglasCors")]
 [ApiController]
+[Produces(MediaTypeNames.Application.Json)]
+[SwaggerTag("Products Management Endpoints")]
 [Route("/api/v1/[controller]")]
 public class ProductsController : ControllerBase
 {
@@ -21,6 +28,7 @@ public class ProductsController : ControllerBase
     }
     
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<ProductResource>), 200)]
     public async Task<IEnumerable<ProductResource>> GetAllAsync()
     {
         var products = await _productService.ListAsync();
@@ -29,6 +37,9 @@ public class ProductsController : ControllerBase
     }
     
     [HttpPost]
+    [ProducesResponseType(typeof(ProductResource), 201)]
+    [ProducesResponseType(typeof(List<string>), 400)]
+    [ProducesResponseType(500)]
     public async Task<IActionResult> PostAsync([FromBody] SaveProductResource resource)
     {
         if (!ModelState.IsValid)
@@ -41,7 +52,7 @@ public class ProductsController : ControllerBase
             return BadRequest(result.Message);
 
         var productResource = _mapper.Map<Product, ProductResource>(result.Resource);
-        return Ok(productResource);
+        return Created(nameof(PostAsync), productResource);
     }
     
     [HttpPut("{id}")]

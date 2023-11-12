@@ -1,4 +1,6 @@
-﻿namespace AyniBackendWeb.Ayni.Domain.Models;
+﻿using AyniBackendWeb.Security.Domain.Models;
+
+namespace AyniBackendWeb.Ayni.Domain.Models;
 
 public class Cost
 {
@@ -8,5 +10,8 @@ public class Cost
     public int Amount { get; set; }
     
     public int UserId { get; set; }
+    
     public User User { get; set; }
+    
+
 }

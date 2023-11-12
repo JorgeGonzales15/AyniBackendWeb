@@ -1,4 +1,5 @@
 using AyniBackendWeb.Ayni.Domain.Models;
+using AyniBackendWeb.Security.Domain.Models;
 using AyniBackendWeb.Shared.Extensions;
 using Microsoft.EntityFrameworkCore;
 
@@ -10,6 +11,8 @@ public class AppDbContext : DbContext
     {
     }
 
+    //public DbSet<User> Users { get; set; }
+    
     public DbSet<User> Users { get; set; }
     public DbSet<Crop> Crops { get; set; }
     public DbSet<Product> Products { get; set; }
@@ -25,9 +28,9 @@ public class AppDbContext : DbContext
         builder.Entity<User>().ToTable("Users");
         builder.Entity<User>().HasKey(p => p.Id);
         builder.Entity<User>().Property(p => p.Id).IsRequired().ValueGeneratedOnAdd();
-        builder.Entity<User>().Property(p => p.Name).IsRequired().HasMaxLength(30);
+        builder.Entity<User>().Property(p => p.Username).IsRequired().HasMaxLength(30);
         builder.Entity<User>().Property(p=>p.Email).IsRequired().HasMaxLength(50);
-        builder.Entity<User>().Property(p=>p.Password).IsRequired().HasMaxLength(50);
+
         
         //Relationships
         builder.Entity<User>()

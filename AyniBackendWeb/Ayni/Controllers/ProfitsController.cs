@@ -1,26 +1,35 @@
-﻿using AutoMapper;
+﻿using System.Net.Mime;
+using AutoMapper;
 using AyniBackendWeb.Ayni.Domain.Models;
 using AyniBackendWeb.Ayni.Domain.Services;
 using AyniBackendWeb.Ayni.Resources;
 using AyniBackendWeb.Shared.Extensions;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace AyniBackendWeb.Ayni.Controllers;
 
+
+
+[EnableCors("ReglasCors")]
 [ApiController]
+[Produces(MediaTypeNames.Application.Json)]
+[SwaggerTag("Profits Management Endpoints")]
 [Route("/api/v1/[controller]")]
-public class ProfitController : ControllerBase
+public class ProfitsController : ControllerBase
 {
     private readonly IProfitService _profitService;
     private readonly IMapper _mapper;
 
-    public ProfitController(IProfitService profitService, IMapper mapper)
+    public ProfitsController(IProfitService profitService, IMapper mapper)
     {
         _profitService = profitService;
         _mapper = mapper;
     }
     
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<ProfitResource>), 200)]
     public async Task<IEnumerable<ProfitResource>> GetAllAsync()
     {
         var profits = await _profitService.ListAsync();
@@ -31,6 +40,9 @@ public class ProfitController : ControllerBase
     }
     
     [HttpPost]
+    [ProducesResponseType(typeof(ProfitResource), 201)]
+    [ProducesResponseType(typeof(List<string>), 400)]
+    [ProducesResponseType(500)]
     public async Task<IActionResult> PostAsync([FromBody] 
         SaveProfitResource resource)
     {
@@ -43,7 +55,7 @@ public class ProfitController : ControllerBase
             return BadRequest(result.Message);
         var profitResource = _mapper.Map<Profit, 
             ProfitResource>(result.Resource);
-        return Ok(profitResource);
+        return Created(nameof(PostAsync), profitResource);
     }
     
     [HttpPut("{id}")]

@@ -1,3 +1,5 @@
+using AyniBackendWeb.Security.Resources;
+
 namespace AyniBackendWeb.Ayni.Resources;
 
 public class CropResource

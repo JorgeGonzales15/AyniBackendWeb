@@ -8,7 +8,7 @@ public class ModelToResourceProfile : Profile
 {
     public ModelToResourceProfile()
     {
-        CreateMap<User, UserResource>();
+
         CreateMap<Crop, CropResource>();
         CreateMap<Cost, CostResource>();
         CreateMap<Profit, ProfitResource>();

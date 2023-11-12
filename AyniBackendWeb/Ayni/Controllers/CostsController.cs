@@ -1,36 +1,45 @@
+using System.Net.Mime;
 using AutoMapper;
 using AyniBackendWeb.Ayni.Domain.Models;
 using AyniBackendWeb.Ayni.Domain.Services;
 using AyniBackendWeb.Ayni.Resources;
 using AyniBackendWeb.Shared.Extensions;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace AyniBackendWeb.Ayni.Controllers;
 
+[EnableCors("ReglasCors")]
 [ApiController]
+[Produces(MediaTypeNames.Application.Json)]
+[SwaggerTag("Costs Management Endpoints")]
 [Route("/api/v1/[controller]")]
-public class CostController : ControllerBase
+public class CostsController : ControllerBase
 {
     private readonly ICostService _costService;
     private readonly IMapper _mapper;
 
-    public CostController(ICostService costService, IMapper mapper)
+    public CostsController(ICostService costService, IMapper mapper)
     {
         _costService = costService;
         _mapper = mapper;
     }
     
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<CostResource>), 200)]
     public async Task<IEnumerable<CostResource>> GetAllAsync()
     {
         var costs = await _costService.ListAsync();
-        var resources = _mapper.Map<IEnumerable<Cost>, 
-            IEnumerable<CostResource>>(costs);
+        var resources = _mapper.Map<IEnumerable<Cost>, IEnumerable<CostResource>>(costs);
         return resources;
 
     }
     
     [HttpPost]
+    [ProducesResponseType(typeof(CostResource), 201)]
+    [ProducesResponseType(typeof(List<string>), 400)]
+    [ProducesResponseType(500)]
     public async Task<IActionResult> PostAsync([FromBody] 
         SaveCostResource resource)
     {
@@ -41,9 +50,8 @@ public class CostController : ControllerBase
         var result = await _costService.SaveAsync(cost);
         if (!result.Success)
             return BadRequest(result.Message);
-        var costResource = _mapper.Map<Cost, 
-            CostResource>(result.Resource);
-        return Ok(costResource);
+        var costResource = _mapper.Map<Cost, CostResource>(result.Resource);
+        return Created(nameof(PostAsync), costResource);
     }
     
     [HttpPut("{id}")]

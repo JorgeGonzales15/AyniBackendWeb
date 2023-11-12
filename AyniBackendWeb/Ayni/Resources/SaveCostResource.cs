@@ -1,5 +1,8 @@
-﻿namespace AyniBackendWeb.Ayni.Resources;
+﻿using Swashbuckle.AspNetCore.Annotations;
 
+namespace AyniBackendWeb.Ayni.Resources;
+
+[SwaggerSchema(Required = new []{"Name"})]
 public class SaveCostResource
 {
     public string Name { get; set; }

@@ -1,3 +1,5 @@
+using AyniBackendWeb.Security.Domain.Models;
+
 namespace AyniBackendWeb.Ayni.Domain.Models;
 
 public class Order
@@ -13,4 +15,5 @@ public class Order
     public Product Product { get; set; }
     public int UserId { get; set; }
     public User User { get; set; }
+
 }

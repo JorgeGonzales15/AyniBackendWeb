@@ -1,4 +1,6 @@
-﻿namespace AyniBackendWeb.Ayni.Resources;
+﻿using AyniBackendWeb.Security.Resources;
+
+namespace AyniBackendWeb.Ayni.Resources;
 
 public class ProfitResource
 {

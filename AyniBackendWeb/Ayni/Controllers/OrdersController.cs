@@ -1,14 +1,19 @@
+using System.Net.Mime;
 using AutoMapper;
 using AyniBackendWeb.Ayni.Domain.Models;
 using AyniBackendWeb.Ayni.Domain.Services;
 using AyniBackendWeb.Ayni.Resources;
 using AyniBackendWeb.Shared.Extensions;
+using Microsoft.AspNetCore.Cors;
 using Microsoft.AspNetCore.Mvc;
+using Swashbuckle.AspNetCore.Annotations;
 
 namespace AyniBackendWeb.Ayni.Controllers;
 
-
+[EnableCors("ReglasCors")]
 [ApiController]
+[Produces(MediaTypeNames.Application.Json)]
+[SwaggerTag("Orders Management Endpoints")]
 [Route("/api/v1/[controller]")]
 public class OrdersController : ControllerBase
 {
@@ -22,6 +27,7 @@ public class OrdersController : ControllerBase
     }
     
     [HttpGet]
+    [ProducesResponseType(typeof(IEnumerable<CropResource>), 200)]
     public async Task<IEnumerable<OrderResource>> GetAllAsync()
     {
         var orders = await _orderService.ListAsync();
@@ -32,6 +38,9 @@ public class OrdersController : ControllerBase
     }
     
     [HttpPost]
+    [ProducesResponseType(typeof(CropResource), 201)]
+    [ProducesResponseType(typeof(List<string>), 400)]
+    [ProducesResponseType(500)]
     public async Task<IActionResult> PostAsync([FromBody] 
         SaveOrderResource resource)
     {
@@ -44,7 +53,7 @@ public class OrdersController : ControllerBase
             return BadRequest(result.Message);
         var orderResource = _mapper.Map<Order, 
             OrderResource>(result.Resource);
-        return Ok(orderResource);
+        return Created(nameof(PostAsync), orderResource);
     }
     
     [HttpPut("{id}")]
